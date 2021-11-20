@@ -5,7 +5,9 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "test": "jest"
+    "start": "cross-env PORT=3030 NODE_ENV=dev nodemon ./api",
+    "start:build": "cross-env PORT=3030 NODE_ENV=prod nodemon ./api",
+    "test": "cross-env NODE_ENV=test jest --watchAll --collect-coverage"
   },
   "keywords": [],
   "author": "",

@@ -1,0 +1,28 @@
+GET http://localhost:3030/tasks
+
+###
+GET http://localhost:3030/tasks/619516dd75bcdf9b77e6690c
+
+###
+
+POST  http://localhost:3030/tasks
+content-type: application/json
+
+{
+  "title": "Tarea adicional",
+  "responsible": "Raul"
+}
+
+###
+PATCH  http://localhost:3030/tasks/619516dd75bcdf9b77e6690c
+content-type: application/json
+
+{
+  "responsible": "Juanita"
+}
+
+###
+DELETE http://localhost:3030/tasks/61963b25b0fab673511beb6f
+
+###
+DELETE http://localhost:3030/tasks/3
