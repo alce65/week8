@@ -14,7 +14,7 @@ export function addTask(req, res, next) {
     next(new Error());
   }
   task.isCompleted = task.isCompleted ? task.isCompleted : false;
-  const newTask = new Task(task);
+  const newTask = Task.create(task);
   newTask.algo();
   newTask
     .save()
