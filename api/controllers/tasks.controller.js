@@ -25,12 +25,18 @@ export function addTask(req, res, next) {
 }
 
 export function getTaskById(req, res, next) {
+  if (!req.params.id) {
+    next(new Error('Invalid id'));
+  }
   Task.findById(req.params.id)
     .then((result) => res.json(result))
     .catch((err) => next(err));
 }
 
 export function updateTask(req, res, next) {
+  if (!req.params.id) {
+    next(new Error('Invalid id'));
+  }
   Task.findByIdAndUpdate(req.params.id, req.body, { new: true })
     .then((updatedTask) => {
       res.json(updatedTask);
@@ -47,7 +53,5 @@ export function deleteTask(req, res, next) {
         res.status(404).json({ message: 'Not found' });
       }
     })
-    .catch((err) => {
-      next(err);
-    });
+    .catch((err) => next(err));
 }

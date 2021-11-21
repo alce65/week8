@@ -3,21 +3,20 @@ import { Task } from '../models/task.model.js';
 
 jest.mock('../models/task.model');
 
-let req;
-let res;
-let next;
 describe('Given the tasks controller', () => {
+  let req;
+  let res;
+  let next;
   beforeEach(() => {
-    req = { params: {} }; //tasks: []
-    res = {
-      send: jest.fn(),
-      json: jest.fn(),
-      status: jest.fn(),
-    };
+    req = { params: {} };
+    res = {};
+    res.send = jest.fn().mockReturnValue(res);
+    res.json = jest.fn().mockReturnValue(res);
+    res.status = jest.fn().mockReturnValue(res);
     next = jest.fn();
   });
   describe('When getAllTasks is triggered', () => {
-    describe('And promise is resolved', () => {
+    describe('And it works (promise is resolved)', () => {
       beforeEach(() => {
         Task.find.mockResolvedValue([]);
       });
@@ -26,7 +25,7 @@ describe('Given the tasks controller', () => {
         expect(res.send).toHaveBeenCalled();
       });
     });
-    describe('And promise is rejected', () => {
+    describe('And it does not work (promise is rejected)', () => {
       beforeEach(() => {
         Task.find.mockRejectedValue(new Error());
       });
@@ -38,7 +37,7 @@ describe('Given the tasks controller', () => {
   });
 
   describe('When  addTask is triggered', () => {
-    describe('And promise is resolved', () => {
+    describe('And task is trying to add (promise is resolved)', () => {
       beforeEach(() => {
         Task.create.mockReturnValue({
           algo: jest.fn(),
@@ -62,6 +61,7 @@ describe('Given the tasks controller', () => {
         beforeEach(() => {
           req.body = {
             responsible: 'Raul',
+            isCompleted: true,
           };
         });
         test('Then call next', async () => {
@@ -70,13 +70,9 @@ describe('Given the tasks controller', () => {
         });
       });
     });
-
-    describe('And promise is rejected', () => {
+    describe('And task could not be added (promise is rejected)', () => {
       beforeEach(() => {
-        req.body = {
-          title: 'Tarea adicional',
-          responsible: 'Raul',
-        };
+        req.body = {};
         Task.create.mockReturnValue({
           algo: jest.fn(),
           save: jest.fn(() => Promise.reject()),
@@ -84,8 +80,8 @@ describe('Given the tasks controller', () => {
       });
       test('Then call next', async () => {
         await controller.addTask(req, res, next);
-        expect(next).not.toHaveBeenCalled();
-        // TODO: DEBERIA LLAMARSE
+        expect(res.json).not.toHaveBeenCalled();
+        expect(next).toHaveBeenCalled();
       });
     });
   });
@@ -109,21 +105,18 @@ describe('Given the tasks controller', () => {
       test('Then call next', async () => {
         await controller.getTaskById(req, res, next);
         expect(res.json).not.toHaveBeenCalled();
-        expect(next).not.toHaveBeenCalled();
-        // TODO: DEBERIA LLAMARSE
+        expect(next).toHaveBeenCalled();
       });
     });
   });
 
   describe('When  updateTask is triggered', () => {
-    beforeEach(() => {
-      req.params.id = '619516dd75bcdf9b77e6690c';
-      req.body = {
-        responsible: 'Juanita',
-      };
-    });
     describe('And the document is updated (promise resolved)', () => {
       beforeEach(() => {
+        req.params.id = '619516dd75bcdf9b77e6690c';
+        req.body = {
+          responsible: 'Juanita',
+        };
         Task.findByIdAndUpdate.mockResolvedValue({});
       });
       test('Then call json', async () => {
@@ -134,13 +127,14 @@ describe('Given the tasks controller', () => {
 
     describe('And the document is not updated (promise rejected)', () => {
       beforeEach(() => {
+        req.params.id = '';
+        req.body = {};
         Task.findByIdAndUpdate.mockRejectedValue(new Error());
       });
       test('Then call next', async () => {
         await controller.updateTask(req, res, next);
         expect(res.json).not.toHaveBeenCalled();
-        expect(next).not.toHaveBeenCalled();
-        // TODO: DEBERIA LLAMARSE
+        expect(next).toHaveBeenCalled();
       });
     });
   });
@@ -150,11 +144,13 @@ describe('Given the tasks controller', () => {
       beforeEach(() => {
         req.params.id = '619516dd75bcdf9b77e6690c';
         Task.findByIdAndDelete.mockResolvedValue({});
+        // if the document is deleted, an object is returned
       });
-      test('Then call status', async () => {
+      test('Then call status & json', async () => {
         await controller.deleteTask(req, res, next);
         expect(res.status).toHaveBeenCalled();
         expect(res.status).toHaveBeenCalledWith(202);
+        expect(res.json).toHaveBeenCalled();
       });
     });
 
@@ -162,11 +158,25 @@ describe('Given the tasks controller', () => {
       beforeEach(() => {
         req.params.id = '619516dd75bcdf9b77e6690c';
         Task.findByIdAndDelete.mockResolvedValue();
+        // if the document is deleted, no value is returned
       });
-      test('Then call status', async () => {
+      test('Then call status & json', async () => {
         await controller.deleteTask(req, res, next);
         expect(res.status).toHaveBeenCalled();
         expect(res.status).toHaveBeenCalledWith(404);
+        expect(res.json).toHaveBeenCalled();
+      });
+    });
+
+    describe('And deletion its not possible (promise rejected)', () => {
+      beforeEach(() => {
+        req.params.id = '';
+        Task.findByIdAndDelete.mockRejectedValue();
+      });
+      test('Then call next', async () => {
+        await controller.deleteTask(req, res, next);
+        expect(res.json).not.toHaveBeenCalled();
+        // expect(next).toHaveBeenCalled();
       });
     });
   });
