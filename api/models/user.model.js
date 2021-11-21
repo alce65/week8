@@ -5,7 +5,12 @@ import mongoose from 'mongoose';
 const userSchema = new mongoose.Schema({
   name: String,
   email: String,
-  tasks: Array,
+  tasks: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Task', // nombre del modelo
+    },
+  ],
 });
 
 userSchema.set('toJSON', {

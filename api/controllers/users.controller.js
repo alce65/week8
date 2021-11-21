@@ -2,6 +2,10 @@ import { User } from '../models/user.model.js';
 
 export function getAllUsers(req, res, next) {
   User.find({})
+    .populate('tasks', {
+      title: 1,
+      isCompleted: 1,
+    })
     .then((result) => res.send(result))
     .catch((err) => next(err));
 

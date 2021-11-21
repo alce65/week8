@@ -4,7 +4,10 @@ import mongoose from 'mongoose';
 
 const taskSchema = new mongoose.Schema({
   title: String,
-  responsible: String,
+  responsible: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User', // nombre del modelo
+  },
   isCompleted: Boolean,
 });
 taskSchema.methods.algo = function () {};

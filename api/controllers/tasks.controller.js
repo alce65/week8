@@ -1,26 +1,38 @@
 import { Task } from '../models/task.model.js';
+import { User } from '../models/user.model.js';
 
 export async function getAllTasks(req, res, next) {
   try {
-    const result = await Task.find({});
+    const result = await Task.find({}).populate('responsible', {
+      name: 1,
+      email: 1,
+    });
     res.send(result);
   } catch (err) {
     next(err);
   }
 }
-export function addTask(req, res, next) {
-  const task = req.body;
-  if (!task.title) {
+export async function addTask(req, res, next) {
+  const { title, isCompleted, userId } = req.body;
+  if (!title || !userId) {
     next(new Error());
   }
-  task.isCompleted = task.isCompleted ? task.isCompleted : false;
-  const newTask = Task.create(task);
+  const user = await User.findById(userId);
+  const task = {
+    title,
+    isCompleted: isCompleted ? isCompleted : false,
+    responsible: user._id,
+  };
+  const newTask = await Task.create(task);
   newTask.algo();
   newTask
     .save()
-    .then((result) => {
-      res.json(result);
+    .then((savedTask) => {
+      user.tasks = [...user.tasks, savedTask._id];
+      res.json(savedTask);
+      return user;
     })
+    .then((user) => user.save())
     .catch((err) => next(err));
 }
 

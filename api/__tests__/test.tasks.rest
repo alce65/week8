@@ -10,7 +10,7 @@ content-type: application/json
 
 {
   "title": "Tarea adicional",
-  "responsible": "Raul"
+  "userId": "619a79c756ce74cd9336ce4e"
 }
 
 ###
