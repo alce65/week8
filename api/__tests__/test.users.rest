@@ -1,0 +1,29 @@
+GET http://localhost:3030/users
+
+###
+GET http://localhost:3030/users/619a79c756ce74cd9336ce4e
+
+###
+
+POST  http://localhost:3030/users
+content-type: application/json
+
+{
+  "name": "Raul",
+  "email": "raul@sample.com",
+  "tasks": []
+}
+
+###
+PATCH  http://localhost:3030/users/619a7ca6ab383f17a2c34b7a
+content-type: application/json
+
+{
+  "name": "Juanita",
+  "email": "juanita@sample.com"
+}
+
+###
+DELETE http://localhost:3030/users/619a7cc0ab383f17a2c34b7c
+
+###
