@@ -16,6 +16,7 @@ export async function addTask(req, res, next) {
   const { title, isCompleted, userId } = req.body;
   if (!title || !userId) {
     next(new Error());
+    return;
   }
   try {
     const user = await User.findById(userId);
@@ -27,8 +28,8 @@ export async function addTask(req, res, next) {
     const savedTask = await Task.create(task);
     savedTask.algo();
     user.tasks = [...user.tasks, savedTask._id];
-    res.json(savedTask);
     user.save();
+    res.json(savedTask);
   } catch (err) {
     next(err);
   }
@@ -47,6 +48,7 @@ export async function addTask(req, res, next) {
 export function getTaskById(req, res, next) {
   if (!req.params.id) {
     next(new Error('Invalid id'));
+    return;
   }
   Task.findById(req.params.id)
     .populate('responsible', {
@@ -60,6 +62,7 @@ export function getTaskById(req, res, next) {
 export function updateTask(req, res, next) {
   if (!req.params.id) {
     next(new Error('Invalid id'));
+    return;
   }
   Task.findByIdAndUpdate(req.params.id, req.body, { new: true })
     .then((updatedTask) => {

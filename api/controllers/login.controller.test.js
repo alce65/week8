@@ -1,7 +1,17 @@
 import * as controller from './login.controller.js';
+import auth from '../helpers/auth.helpers.js';
 import { User } from '../models/user.model.js';
 
 jest.mock('../models/user.model');
+jest.mock('../helpers/auth.helpers');
+
+/* jest.mock('./login.controller.js', () => {
+  return {
+    ...jest.requireActual('./login.controller.js'),
+    checkPasswd: jest.fn().mockResolvedValue(true),
+    createJWT: jest.fn().mockReturnValue('token'),
+  };
+});*/
 
 describe('Given the Login controller', () => {
   let req;
@@ -14,14 +24,22 @@ describe('Given the Login controller', () => {
     res.json = jest.fn().mockReturnValue(res);
     res.status = jest.fn().mockReturnValue(res);
     next = jest.fn();
+
+    /* controller.(); */
   });
 
   describe('When a user try to log (logUser is triggered)', () => {
     describe('And user and passwd are valid (promise is resolved)', () => {
       beforeEach(() => {
-        User.findOne.mockResolvedValue({});
+        User.findOne.mockResolvedValue({
+          name: 'Julian',
+          passwd: '1234',
+          _id: '619a79c756ce74cd9336ce4e',
+        });
+        auth.checkPasswd = jest.fn().mockResolvedValue(true);
+        auth.createJWT = jest.fn().mockImplementation(() => 'token');
         req.body = {
-          userName: 'Raul',
+          userName: 'Julian',
           passwd: 1234,
         };
       });
@@ -38,6 +56,7 @@ describe('Given the Login controller', () => {
     describe('And user or passwd are not valid (promise is resolved)', () => {
       beforeEach(() => {
         User.findOne.mockResolvedValue([]);
+        auth.checkPasswd = jest.fn().mockResolvedValue(false);
         req.body = {
           userName: 'Pepe',
           passwd: '',
@@ -53,6 +72,7 @@ describe('Given the Login controller', () => {
     describe('And user is not valid (promise is rejected)', () => {
       beforeEach(() => {
         User.findOne.mockRejectedValue([]);
+        auth.checkPasswd = jest.fn().mockResolvedValue(false);
         req.body = {
           userName: 'Pepe',
           passwd: '',

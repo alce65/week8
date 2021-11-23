@@ -1,6 +1,4 @@
-import jwt from 'jsonwebtoken';
-import dotenv from 'dotenv';
-dotenv.config();
+import auth from '../helpers/auth.helpers.js';
 import { User } from '../models/user.model.js';
 
 export async function logUser(req, res, next) {
@@ -10,31 +8,19 @@ export async function logUser(req, res, next) {
   try {
     user = await User.findOne({ name: userName });
   } catch (err) {
-    next(err);
+    // next(err);
+    // return;
+    // si falla la promesa pasa al else final
   }
-
-  if (!user || !checkPasswd(passwd)) {
+  if (user && (await auth.checkPasswd(passwd, user))) {
+    const jwToken = auth.createJWT(user);
+    res.json({
+      user: user.name,
+      token: jwToken,
+    });
+    return jwToken;
+  } else {
     res.status(401).json({ message: 'Invalid user or passwd' });
     return;
   }
-  const jwToken = createJWT(user);
-  res.json({
-    user: user.name,
-    token: jwToken,
-  });
-  return jwToken;
-}
-
-function checkPasswd(passwd) {
-  return passwd ? true : false;
-}
-
-function createJWT(user) {
-  const tokenPayload = {
-    name: user.name,
-    id: user._id,
-  };
-
-  const secret = process.env.SECRET;
-  return jwt.sign(tokenPayload, secret);
 }

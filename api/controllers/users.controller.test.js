@@ -61,6 +61,7 @@ describe('Given the Users controller', () => {
           req.body = {
             name: 'Raul',
             email: 'raul@sample.com',
+            passwd: '1234',
           };
         });
         test('Then call json', async () => {

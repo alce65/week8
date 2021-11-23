@@ -1,6 +1,12 @@
 GET http://localhost:3030/profile
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiUmF1bCIsImlkIjoiNjE5YTc5Yzc1NmNlNzRjZDkzMzZjZTRlIiwiaWF0IjoxNjM3NjIwNTMwfQ.Mf8Z8-EzBHGEED_6T9sP6eu7SsXYnf26gvO5YOsix04
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiSnVsaWFuIiwiaWQiOiI2MTljYjkxNjAyZGI2N2UxNmYzY2VhMjYiLCJpYXQiOjE2Mzc2Njk1OTN9.LZOxhGkHdq6yl7-_YuWEF8BYKG8MQJUt671DJbmdRtQ
 
 ###
+
+GET http://localhost:3030/profile
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiSnVsaWFuIiwiaWQiOiI2MTljYjkxNjAyZGI2N2UxNmYzY2VhMjYiLCJpYXQiOjE2Mzc2Njk1OTN9.LZOxhGkHdq6yl7-_YuWEF8BYKG8MQJUt671DJbmdRtP
+
+###
+
 
 GET http://localhost:3030/profile

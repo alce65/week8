@@ -9,8 +9,9 @@ POST  http://localhost:3030/users
 content-type: application/json
 
 {
-  "name": "Raul",
-  "email": "raul@sample.com",
+  "name": "Julian",
+  "email": "jul@sample.com",
+  "passwd": "1234",
   "tasks": []
 }
 

@@ -52,13 +52,15 @@ describe('Given the tasks controller', () => {
         User.findById.mockResolvedValue({
           _id: mongoose.Types.ObjectId('619516dd75bcdf9b77e6690c'),
           tasks: [],
+          save: jest.fn(),
         });
       });
       describe('And Title is present', () => {
         beforeEach(() => {
           req.body = {
             title: 'Tarea adicional',
-            responsible: mongoose.Types.ObjectId('619516dd75bcdf9b77e6690c'),
+            // responsible: mongoose.Types.ObjectId('619516dd75bcdf9b77e6690c'),
+            userId: '619516dd75bcdf9b77e6690c',
           };
         });
         test('Then call json', async () => {

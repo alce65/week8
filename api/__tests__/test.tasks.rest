@@ -19,6 +19,15 @@ content-type: application/json
 }
 
 ###
+
+POST  http://localhost:3030/tasks
+content-type: application/json
+
+{
+  "userId": "619a79c756ce74cd9336ce4e"
+}
+
+###
 PATCH  http://localhost:3030/tasks/619ab9d9ac1d044a63e8802c
 content-type: application/json
 

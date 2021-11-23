@@ -1,3 +1,4 @@
+import bcrypt from 'bcryptjs';
 import { User } from '../models/user.model.js';
 
 export function getAllUsers(req, res, next) {
@@ -19,9 +20,14 @@ export function getAllUsers(req, res, next) {
 
 export function addUser(req, res, next) {
   const user = req.body;
-  if (!user.name) {
+  if (!user.name || !user.passwd) {
     next(new Error());
+    return;
   }
+
+  const salt = bcrypt.genSaltSync(10);
+  user.passwd = bcrypt.hashSync(user.passwd, salt);
+
   const newUser = User.create(user);
   newUser
     .then((result) => {
@@ -33,6 +39,7 @@ export function addUser(req, res, next) {
 export function getUserById(req, res, next) {
   if (!req.params.id) {
     next(new Error('Invalid id'));
+    return;
   }
   User.findById(req.params.id)
     .populate('tasks')
@@ -43,6 +50,7 @@ export function getUserById(req, res, next) {
 export function updateUser(req, res, next) {
   if (!req.params.id) {
     next(new Error('Invalid id'));
+    return;
   }
   User.findByIdAndUpdate(req.params.id, req.body, { new: true })
     .then((updatedUser) => {

@@ -6,14 +6,21 @@ export async function readProfile(req, res, next) {
   let token = '';
   let decodeToken = null;
 
-  if (authorization && authorization.toLowerCase().startsWith('bearer')) {
-    token = authorization.substring(7);
-    decodeToken = jwt.verify(token, process.env.SECRET);
+  try {
+    if (authorization && authorization.toLowerCase().startsWith('bearer')) {
+      token = authorization.substring(7);
+      decodeToken = jwt.verify(token, process.env.SECRET);
 
-    console.log(decodeToken);
+      console.log(decodeToken);
+    }
+  } catch (error) {
+    res.status(401).json({
+      error: 'token missing or invalid',
+    });
+    return;
   }
 
-  if (!token || !decodeToken.id) {
+  if (!token || !decodeToken?.id) {
     res.status(401).json({
       error: 'token missing or invalid',
     });
@@ -28,4 +35,5 @@ export async function readProfile(req, res, next) {
       token,
     });
   }
+  return token;
 }
