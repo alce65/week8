@@ -4,6 +4,8 @@ import path from 'path';
 import { mongoConnect } from './config/db.js';
 import tasksRouter from './routes/tasks.router.js';
 import usersRouter from './routes/users.router.js';
+import loginRouter from './routes/login.router.js';
+import profileRouter from './routes/profile.router.js';
 
 // Initial operations
 
@@ -31,6 +33,8 @@ if (process.env.NODE_ENV !== 'test') {
 
 app.use('/tasks', tasksRouter);
 app.use('/users', usersRouter);
+app.use('/login', loginRouter);
+app.use('/profile', profileRouter);
 
 app.use((err, req, res, next) => {
   console.log('Gestión e errores');

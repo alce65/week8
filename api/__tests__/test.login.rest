@@ -1,0 +1,17 @@
+POST  http://localhost:3030/login
+content-type: application/json
+
+{
+  "userName": "Pepe",
+  "passwd": "12345"
+}
+
+###
+
+POST  http://localhost:3030/login
+content-type: application/json
+
+{
+  "userName": "Raul",
+  "passwd": "12345"
+}

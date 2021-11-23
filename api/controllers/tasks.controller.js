@@ -17,23 +17,31 @@ export async function addTask(req, res, next) {
   if (!title || !userId) {
     next(new Error());
   }
-  const user = await User.findById(userId);
-  const task = {
-    title,
-    isCompleted: isCompleted ? isCompleted : false,
-    responsible: user._id,
-  };
-  const newTask = await Task.create(task);
-  newTask.algo();
-  newTask
-    .save()
-    .then((savedTask) => {
-      user.tasks = [...user.tasks, savedTask._id];
-      res.json(savedTask);
-      return user;
-    })
-    .then((user) => user.save())
-    .catch((err) => next(err));
+  try {
+    const user = await User.findById(userId);
+    const task = {
+      title,
+      isCompleted: isCompleted ? isCompleted : false,
+      responsible: user._id,
+    };
+    const savedTask = await Task.create(task);
+    savedTask.algo();
+    user.tasks = [...user.tasks, savedTask._id];
+    res.json(savedTask);
+    user.save();
+  } catch (err) {
+    next(err);
+  }
+
+  // newTask
+  //   .save()
+  //   .then((savedTask) => {
+  //     user.tasks = [...user.tasks, savedTask._id];
+  //     res.json(savedTask);
+  //     return user;
+  //   })
+  //   .then((user) => user.save())
+  //   .catch((err) => next(err));
 }
 
 export function getTaskById(req, res, next) {
@@ -41,6 +49,10 @@ export function getTaskById(req, res, next) {
     next(new Error('Invalid id'));
   }
   Task.findById(req.params.id)
+    .populate('responsible', {
+      name: 1,
+      email: 1,
+    })
     .then((result) => res.json(result))
     .catch((err) => next(err));
 }

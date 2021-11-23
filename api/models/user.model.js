@@ -7,7 +7,7 @@ const userSchema = new mongoose.Schema({
   email: String,
   tasks: [
     {
-      type: mongoose.Schema.Types.ObjectId,
+      type: mongoose.Types.ObjectId,
       ref: 'Task', // nombre del modelo
     },
   ],

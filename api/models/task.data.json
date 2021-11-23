@@ -1,5 +1,5 @@
 [
-  { "title": "Tarea1", "responsible": "Juanita", "isCompleted": "true" },
-  { "title": "Tarea2", "responsible": "Ernesto", "isCompleted": "false" },
-  { "title": "Tarea3", "responsible": "Juanita", "isCompleted": "true" }
+  { "title": "Tarea1", "isCompleted": "true" },
+  { "title": "Tarea2", "isCompleted": "false" },
+  { "title": "Tarea3", "isCompleted": "true" }
 ]

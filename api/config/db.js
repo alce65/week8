@@ -10,7 +10,6 @@ export async function mongoConnect() {
   console.log('NODE_ENV', process.env.NODE_ENV);
   if (process.env.NODE_ENV === 'test') {
     databaseName = process.env.DB_NAME_TEST;
-    console.log({ databaseName });
   } else if (process.env.NODE_ENV === 'dev') {
     databaseName = process.env.DB_NAME;
   } else {

@@ -5,7 +5,7 @@ import mongoose from 'mongoose';
 const taskSchema = new mongoose.Schema({
   title: String,
   responsible: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: mongoose.Types.ObjectId,
     ref: 'User', // nombre del modelo
   },
   isCompleted: Boolean,

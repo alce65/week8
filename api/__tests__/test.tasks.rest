@@ -1,6 +1,11 @@
 GET http://localhost:3030/tasks
 
-###
+### Valid userID
+
+GET http://localhost:3030/tasks/619ab9d9ac1d044a63e8802c
+
+### Invalid userID
+
 GET http://localhost:3030/tasks/619516dd75bcdf9b77e6690c
 
 ###
@@ -9,20 +14,20 @@ POST  http://localhost:3030/tasks
 content-type: application/json
 
 {
-  "title": "Tarea adicional",
+  "title": "Otra Tarea adicional",
   "userId": "619a79c756ce74cd9336ce4e"
 }
 
 ###
-PATCH  http://localhost:3030/tasks/619516dd75bcdf9b77e6690c
+PATCH  http://localhost:3030/tasks/619ab9d9ac1d044a63e8802c
 content-type: application/json
 
 {
-  "responsible": "Juanita"
+  "title": "Cambiando tarea title"
 }
 
 ###
-DELETE http://localhost:3030/tasks/61963b25b0fab673511beb6f
+DELETE http://localhost:3030/tasks/619be24570ccf3625ce75102
 
 ###
 DELETE http://localhost:3030/tasks/3

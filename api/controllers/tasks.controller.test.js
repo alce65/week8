@@ -1,7 +1,10 @@
+import mongoose from 'mongoose';
 import * as controller from './tasks.controller.js';
 import { Task } from '../models/task.model.js';
+import { User } from '../models/user.model.js';
 
 jest.mock('../models/task.model');
+jest.mock('../models/user.model');
 
 describe('Given the tasks controller', () => {
   let req;
@@ -18,7 +21,9 @@ describe('Given the tasks controller', () => {
   describe('When getAllTasks is triggered', () => {
     describe('And it works (promise is resolved)', () => {
       beforeEach(() => {
-        Task.find.mockResolvedValue([]);
+        Task.find.mockReturnValue({
+          populate: jest.fn().mockResolvedValue([]),
+        });
       });
       test('Then call send', async () => {
         await controller.getAllTasks(req, res, next);
@@ -27,7 +32,9 @@ describe('Given the tasks controller', () => {
     });
     describe('And it does not work (promise is rejected)', () => {
       beforeEach(() => {
-        Task.find.mockRejectedValue(new Error());
+        Task.find.mockReturnValue({
+          populate: jest.fn().mockRejectedValue(new Error()),
+        });
       });
       test('Then call next', async () => {
         await controller.getAllTasks(req, res, next);
@@ -39,16 +46,19 @@ describe('Given the tasks controller', () => {
   describe('When  addTask is triggered', () => {
     describe('And task is trying to add (promise is resolved)', () => {
       beforeEach(() => {
-        Task.create.mockReturnValue({
+        Task.create.mockResolvedValue({
           algo: jest.fn(),
-          save: jest.fn(() => Promise.resolve()),
+        });
+        User.findById.mockResolvedValue({
+          _id: mongoose.Types.ObjectId('619516dd75bcdf9b77e6690c'),
+          tasks: [],
         });
       });
       describe('And Title is present', () => {
         beforeEach(() => {
           req.body = {
             title: 'Tarea adicional',
-            responsible: 'Raul',
+            responsible: mongoose.Types.ObjectId('619516dd75bcdf9b77e6690c'),
           };
         });
         test('Then call json', async () => {
@@ -60,7 +70,7 @@ describe('Given the tasks controller', () => {
       describe('And Title is not present', () => {
         beforeEach(() => {
           req.body = {
-            responsible: 'Raul',
+            responsible: mongoose.Types.ObjectId('619516dd75bcdf9b77e6690c'),
             isCompleted: true,
           };
         });
@@ -73,9 +83,8 @@ describe('Given the tasks controller', () => {
     describe('And task could not be added (promise is rejected)', () => {
       beforeEach(() => {
         req.body = {};
-        Task.create.mockReturnValue({
+        Task.create.mockRejectedValue({
           algo: jest.fn(),
-          save: jest.fn(() => Promise.reject()),
         });
       });
       test('Then call next', async () => {
@@ -90,7 +99,9 @@ describe('Given the tasks controller', () => {
     describe('And the id is found (promise resolved)', () => {
       beforeEach(() => {
         req.params.id = '619516dd75bcdf9b77e6690c';
-        Task.findById.mockResolvedValue({});
+        Task.findById.mockReturnValue({
+          populate: jest.fn().mockResolvedValue([]),
+        });
       });
       test('Then call json', async () => {
         await controller.getTaskById(req, res, next);
@@ -100,7 +111,9 @@ describe('Given the tasks controller', () => {
     describe('And the id is not found (promise rejected)', () => {
       beforeEach(() => {
         req.params.id = '';
-        Task.findById.mockRejectedValue(new Error());
+        Task.findById.mockReturnValue({
+          populate: jest.fn().mockRejectedValue([]),
+        });
       });
       test('Then call next', async () => {
         await controller.getTaskById(req, res, next);
@@ -115,7 +128,7 @@ describe('Given the tasks controller', () => {
       beforeEach(() => {
         req.params.id = '619516dd75bcdf9b77e6690c';
         req.body = {
-          responsible: 'Juanita',
+          responsible: mongoose.Types.ObjectId('619516dd75bcdf9b77e6690c'),
         };
         Task.findByIdAndUpdate.mockResolvedValue({});
       });

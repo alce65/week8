@@ -24,7 +24,6 @@ export function addUser(req, res, next) {
   }
   const newUser = User.create(user);
   newUser
-    .save()
     .then((result) => {
       res.json(result);
     })
@@ -36,6 +35,7 @@ export function getUserById(req, res, next) {
     next(new Error('Invalid id'));
   }
   User.findById(req.params.id)
+    .populate('tasks')
     .then((result) => res.json(result))
     .catch((err) => next(err));
 }

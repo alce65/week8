@@ -1,0 +1,6 @@
+GET http://localhost:3030/profile
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiUmF1bCIsImlkIjoiNjE5YTc5Yzc1NmNlNzRjZDkzMzZjZTRlIiwiaWF0IjoxNjM3NjIwNTMwfQ.Mf8Z8-EzBHGEED_6T9sP6eu7SsXYnf26gvO5YOsix04
+
+###
+
+GET http://localhost:3030/profile

@@ -18,7 +18,9 @@ describe('Given the Users controller', () => {
   describe('When we try to get all users (getAllUsers is triggered)', () => {
     describe('And it works (promise is resolved)', () => {
       beforeEach(() => {
-        User.find.mockResolvedValue([]);
+        User.find.mockReturnValue({
+          populate: jest.fn().mockResolvedValue([]),
+        });
       });
       test('User model exists and have a method "find"', () => {
         expect(User.find).toBeTruthy();
@@ -30,7 +32,9 @@ describe('Given the Users controller', () => {
     });
     describe('And it does not work (promise is rejected)', () => {
       beforeEach(() => {
-        User.find.mockRejectedValue(new Error());
+        User.find.mockReturnValue({
+          populate: jest.fn().mockRejectedValue(new Error()),
+        });
       });
       test('User model exists and have a method "find"', () => {
         expect(User.find).toBeTruthy();
@@ -47,9 +51,7 @@ describe('Given the Users controller', () => {
   describe('When we try to add a user (addUser is triggered)', () => {
     describe('And user is trying to add (promise is resolved)', () => {
       beforeEach(() => {
-        User.create.mockReturnValue({
-          save: jest.fn(() => Promise.resolve()),
-        });
+        User.create.mockResolvedValue({});
       });
       test('User model exists and have a method "create"', () => {
         expect(User.create).toBeTruthy();
@@ -78,18 +80,16 @@ describe('Given the Users controller', () => {
           expect(next).toHaveBeenCalled();
         });
       });
-    });
-    describe('And user could not be added (promise is rejected)', () => {
-      beforeEach(() => {
-        req.body = {};
-        User.create.mockReturnValue({
-          save: jest.fn(() => Promise.reject()),
+      describe('And user could not be added (promise is rejected)', () => {
+        beforeEach(() => {
+          req.body = {};
+          User.create.mockRejectedValue({});
         });
-      });
-      test('Then call next', async () => {
-        await controller.addUser(req, res, next);
-        expect(res.json).not.toHaveBeenCalled();
-        expect(next).toHaveBeenCalled();
+        test('Then call next', async () => {
+          await controller.addUser(req, res, next);
+          expect(res.json).not.toHaveBeenCalled();
+          expect(next).toHaveBeenCalled();
+        });
       });
     });
   });
@@ -98,7 +98,9 @@ describe('Given the Users controller', () => {
     describe('And the id is found (promise resolved)', () => {
       beforeEach(() => {
         req.params.id = '619516dd75bcdf9b77e6690c';
-        User.findById.mockResolvedValue([]);
+        User.findById.mockReturnValue({
+          populate: jest.fn().mockResolvedValue([]),
+        });
       });
       test('User model exists and have a method "findById"', () => {
         expect(User.findById).toBeTruthy();
@@ -111,7 +113,9 @@ describe('Given the Users controller', () => {
     describe('And the id is not found (promise rejected)', () => {
       beforeEach(() => {
         req.params.id = '';
-        User.findById.mockRejectedValue(new Error());
+        User.findById.mockReturnValue({
+          populate: jest.fn().mockRejectedValue(new Error()),
+        });
       });
       test('User model exists and have a method "findById"', () => {
         expect(User.findById).toBeTruthy();
